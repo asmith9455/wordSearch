@@ -1,2 +1,0 @@
-# wordSearch
-search for words
