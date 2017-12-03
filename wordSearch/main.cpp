@@ -46,12 +46,12 @@ void read_graph_from_file(Graph &g, string filepath) {
 		g.addString(s);
 		word_added_count++;
 
-		if (word_added_count % 100 == 0) {
+		/*if (word_added_count % 10000 == 0) {
 			cout << word_added_count << endl;
-		}
+		}*/
 
-		if (false && word_added_count > 10000)
-			break;
+		//if (false && word_added_count > 10000)
+		//	break;
 	}
 
 	//can now quickly search the graph with partial or complete searches
@@ -83,14 +83,27 @@ void user_graph_search_loop(Graph& g) {
 	}
 }
 
+vector<string> search_graph(Graph& g)
+{
+	return g.search("dea", 10);
+}
+
 int main()
 {
 
 	Graph g;
+	vector<string> results;
 	
+	cout << "Hello" << endl;
+
 	read_graph_from_file(g, "word_list_a.txt");
 
-	user_graph_search_loop(g);
+	results = search_graph(g);
+
+	for (const auto& r : results)
+		cout << "result: " << r << endl;
+
+	//user_graph_search_loop(g);
 
 	system("pause");
 

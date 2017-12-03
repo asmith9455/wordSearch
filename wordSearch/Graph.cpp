@@ -1,9 +1,14 @@
 #include "Graph.h"
 
+void Graph::add_node(Node n){
+	nodes.push_back(n);
+}
 
-
-Graph::Graph()
-{
+Node * Graph::last_added_node() {
+	if (nodes.empty())
+		return nullptr;
+	else
+		return &(nodes.back());
 }
 
 void Graph::addString(string s)
@@ -18,9 +23,9 @@ void Graph::addString(string s)
 		next_node = n->check_for_next_node_with(c);
 
 		if (!next_node)
-		{	// if tmpNode is null, we need to add a node with this character.
-			nodes.push_back(Node(c, depth));
-			next_node = &(nodes.back());
+		{	// if tmpNode is null (the node for 'c' doesn't exist), we need to add a node with this character.
+			add_node(Node(c, depth));
+			next_node = last_added_node();		//point to the most recently added element.
 			n->add_next_node(next_node);
 		}
 
@@ -82,9 +87,4 @@ vector<string> Graph::search(string search_string, size_t num_results_to_return)
 	}
 
 	return results;
-}
-
-
-Graph::~Graph()
-{
 }

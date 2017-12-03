@@ -17,7 +17,6 @@ class Node
 	vector<string> _terminating_strings;
 
 public:
-
 	vector<Node*> next_nodes;
 
 	Node(char c, size_t depth);
