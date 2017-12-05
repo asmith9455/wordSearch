@@ -12,6 +12,26 @@ using std::cin;
 using std::cout;
 using std::endl;
 
+void test_001()
+ {
+ 	Graph g;
+ 
+ 	g.addString("abc");
+ 	g.addString("abcd");
+ 	g.addString("test2");
+ 	g.addString("test1");
+ 	g.addString("diagram");
+ 	g.addString("untest");
+	g.addString("aeatr");
+ 
+ 	auto r = g.search("a", 5);
+ 
+ 	cout << "Results are: " << endl;
+ 
+ 	for (auto s : r)
+ 		cout << s << endl;
+ }
+
 //reads words from a file containing one word per line
 //and inserts them into a graph
 Graph read_graph_from_file(string filepath) {
@@ -57,6 +77,9 @@ void user_graph_search_loop(Graph& g) {
 
 int main()
 {
+	test_001();
+
+
 
 	Graph g2 = read_graph_from_file("word_list_a.txt");
 
@@ -69,7 +92,7 @@ int main()
 	for (const auto& r : results2)
 		cout << "result: " << r << endl;
 
-	auto r = g2.node_counts_by_depth();
+	//auto r = g2.node_counts_by_depth();
 
 	system("pause");
 

@@ -26,9 +26,11 @@ size_t Node::get_terminating_strings(size_t index, size_t index_limit, vector<st
 	return add_to.size() - init_size;
 }
 
-void Node::add_next_node(Node* n)
+// the path string is the string including all chars up to this node, but not including this node
+void Node::add_next_node(Node* n, string path_string)
 {
 	next_nodes.push_back(n);
+	path_strings.push_back({path_string});
 }
 
 void Node::add_terminating_string(string s)
@@ -36,15 +38,42 @@ void Node::add_terminating_string(string s)
 	_terminating_strings.push_back(s);
 }
 
-Node* Node::check_for_next_node_with(char c)
+vector<Node*> Node::get_next_nodes(string path_string)
 {
-	for (Node* n : next_nodes)
-		if (n->get_char() == c)
-			return n;
+	size_t index = 0;
+	vector<Node*> results;
 
+	for (Node* n : next_nodes) {
+
+		bool path_matches = std::find(path_strings[index].begin(), path_strings[index].end(), path_string) != path_strings[index].end();
+
+		if (path_matches)
+			results.push_back(n);
+
+		++index;
+	}
+
+	return results;
+}
+
+Node* Node::get_next_node_with(char c, string path_string)
+{
+	size_t index = 0;
+
+	for (Node* n : next_nodes) {
+
+		bool path_matches = std::find(path_strings[index].begin(), path_strings[index].end(), path_string) != path_strings[index].end();
+
+		if (n->get_char() == c)
+		{
+//			if (!path_matches)
+//				path_strings[index].push_back(path_string);
+			
+			return n;
+		}
+		++index;
+	}
+		
 	return nullptr;
 }
 
-Node::~Node()
-{
-}
