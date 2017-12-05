@@ -29,6 +29,10 @@ public:
 
 	Node* check_for_next_node_with(char c);
 
+	size_t depth() {
+		return _depth;
+	}
+
 	~Node();
 };
 

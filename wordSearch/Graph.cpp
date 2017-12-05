@@ -1,14 +1,14 @@
 #include "Graph.h"
 
 void Graph::add_node(Node n){
-	nodes.push_back(n);
+	nodes->push_back(n);
 }
 
-Node * Graph::last_added_node() {
-	if (nodes.empty())
+Node* Graph::last_added_node() {
+	if (nodes->empty())
 		return nullptr;
 	else
-		return &(nodes.back());
+		return &(nodes->back());
 }
 
 void Graph::addString(string s)
@@ -20,6 +20,7 @@ void Graph::addString(string s)
 	for (char c : s)
 	{
 		tmp += c;
+		//this is not the desired behaviour - the memory usage is much higher this way - need to be able to search all nodes at a given depth level
 		next_node = n->check_for_next_node_with(c);
 
 		if (!next_node)
@@ -35,6 +36,8 @@ void Graph::addString(string s)
 
 		depth++;
 	}
+
+	m_max_depth = max(m_max_depth, depth - 1);
 
 	//now just need to add the string s as a terminating string at node n (corresponding to the last character)
 	n->add_terminating_string(s);
