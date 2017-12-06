@@ -72,7 +72,7 @@ public:
 
 		auto inter_set_term = intersection_of_sets(m_terminating_ids, paths);
 
-		if (!inter_set_term.empty())	//bug here?
+		if (!inter_set_term.empty())
 		{
 			results.push_back(current_path);
 			++result_counter;
