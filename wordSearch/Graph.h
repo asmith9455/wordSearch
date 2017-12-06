@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <list>
+#include <map>
 #include <stack>
 #include <memory>
 #include "Node.h"
@@ -22,11 +22,12 @@ private:
 	//shared_ptr<list<Node>> nodes = make_shared<list<Node>>();
 	//list<Node> nodes;
 
-	using nodes_t =list<list<Node>>;
+	using nodes_t =map<size_t, map<char, Node>>;
 
 	shared_ptr<nodes_t> nodes = make_shared<nodes_t>();	//hold the information in a multidimensional array wrapped in a shared pointer
 
 	Node* add_node(char c, size_t depth);
+	//add a new node and return a pointer to it. if an identical node (same char and depth) already exists, then return a reference to the existing node
 	Node* get_node(size_t depth, char c);
 	Node* get_start_node() {
 		return get_node(0, ' ');
@@ -40,7 +41,7 @@ private:
 public:
 
 	Graph() {
-		nodes->push_back({ Node(' ', 0) });
+		nodes->insert({ 0, { {' ', Node(' ', 0)} } });	//insert the start node
 	}
 
 	void addString(string s);

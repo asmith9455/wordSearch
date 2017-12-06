@@ -16,6 +16,18 @@ char Node::get_char()
 // the path string is the string including all chars up to this node, but not including this node
 void Node::add_next_node_connection(Node* next_node, unique_id_t id)
 {
+
+	//map insert allows us to try to insert a node connection - if it already exists then it will return accessors to it
+
+	auto pair = m_node_connections.insert({ next_node, NodeConnection(next_node, id) });
+
+	//if a connection to next_node already existed before the insert, pair.first contains reference to that pair in the map
+
+	if (!pair.second)
+		pair.first->second.add_path_id(id);
+
+
+	/*
 	//check if there is a node connection to n already
 	auto it = std::find_if(m_node_connections.begin(), m_node_connections.end(), 
 		[&next_node](NodeConnection nc) -> bool {return nc.get_next_node() == next_node; });
@@ -23,7 +35,7 @@ void Node::add_next_node_connection(Node* next_node, unique_id_t id)
 	if (it != m_node_connections.end())			//if the next_node pointer is already a connected node
 		it->add_path_id(id);
 	else										//otherwise we need to add a new connection to the node
-		m_node_connections.push_back(NodeConnection(next_node, id));
+		m_node_connections.push_back(NodeConnection(next_node, id));*/
 }
 
 void Node::add_terminating_id(unique_id_t id) {

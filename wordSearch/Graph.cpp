@@ -1,39 +1,33 @@
 #include "Graph.h"
 
-//add a new node and return a pointer to it
+
 Node* Graph::add_node(char c, size_t depth){
 
 	Node n(c, depth);
 
 	if (nodes->size() <= depth)
-		nodes->push_back({});	//push back a new vector of nodes
+		nodes->insert({ nodes->size(), {} });	//new map at this depth
 
-	auto depth_it = nodes->begin();
-	std::advance(depth_it, depth);
+	auto pair = nodes->find(depth)->second.insert({ c, n });	//add the new node at the proper depth
 
-	depth_it->push_back(n);
-	m_last_added_node = &(depth_it->back());	//return a reference to the last added node
+	//pair.second indicates whether an insertion was actually made (pair.second == true) or not
 
-	return m_last_added_node;
+	return &(pair.first->second);
 }
 
 Node* Graph::get_node(size_t depth, char c) {
 	
-	if (nodes->size() <= depth)
+	auto it1 = nodes->find(depth);
+
+	if (it1 == nodes->end())
 		return nullptr;
 
-	auto depth_it = nodes->begin();
-	std::advance(depth_it, depth);
+	auto it2 = it1->second.find(c);
 
-	auto it = std::find_if(
-		depth_it->begin(),
-		depth_it->end(),
-		[&c](Node n) -> bool {return n.get_char() == c; });
-
-	if (it == depth_it->end())
+	if (it2 == it1->second.end())
 		return nullptr;
 	else
-		return &(*it);	//return a pointer to the node we found.
+		return &(it2->second);	//return a pointer to the node we found.
 }
 
 void Graph::addString(string s)
@@ -44,12 +38,15 @@ void Graph::addString(string s)
 	unique_id_t id = num_added_nodes;
 
 	for (char c : s) {
-		//this is not the desired behaviour - the memory usage is much higher this way - need to be able to search all nodes at a given depth level
+
 		next_node = get_node(depth, c);
 
 		if (!next_node)	// if tmpNode is null (the next_node for 'c' doesn't exist), we need to add a node with this character.
 			next_node = add_node(c, depth); //next_node points to the most recently added element.
+			
 
+		//next_node = add_or_get_node(depth, c);
+		
 		//add a connection to the next_node from the current node
 		n->add_next_node_connection(next_node, id);
 

@@ -38,5 +38,11 @@
     <ClInclude Include="NodeConnection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NodeContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeRef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

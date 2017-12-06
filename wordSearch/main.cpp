@@ -56,7 +56,7 @@ Graph read_graph_from_file(string filepath) {
 		if (word_added_count % 1000 == 0)
 			cout << "word_added_count: " << word_added_count << endl;
 
-		if (word_added_count > 3000)
+		if (word_added_count > 450000)
 			break;
 	}
 
@@ -104,7 +104,7 @@ int main()
 
 	//auto r = g2.node_counts_by_depth();
 
-	//system("pause");
+	system("pause");
 
 	return 0;
 }

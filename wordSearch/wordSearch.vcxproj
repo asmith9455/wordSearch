@@ -120,6 +120,8 @@
     <ClInclude Include="Graph.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="NodeConnection.h" />
+    <ClInclude Include="NodeContainer.h" />
+    <ClInclude Include="NodeRef.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

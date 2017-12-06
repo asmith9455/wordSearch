@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+#include <map>
 #include <set>
 #include "NodeConnection.h"
 #include <algorithm>
@@ -19,7 +19,7 @@ private:
 	size_t m_depth;	//depth of the node
 	set<unique_id_t> m_terminating_ids;
 
-	vector<NodeConnection> m_node_connections; //each node contains references to a number of further nodes
+	map<Node*, NodeConnection> m_node_connections; //each node contains references to a number of further nodes
 
 public:
 
@@ -37,32 +37,32 @@ public:
 		set<unique_id_t> intersection_set;
 
 		auto matching_node_con_it = std::find_if(m_node_connections.begin(), m_node_connections.end(),
-			[&incoming_ids, &c, &intersection_set](NodeConnection nc) -> bool 
+			[&incoming_ids, &c, &intersection_set](pair<Node*, NodeConnection> nc) -> bool 
 		{
-			intersection_set = nc.get_path_intersection(incoming_ids);
-			return !intersection_set.empty() && c == nc.get_next_node()->get_char();
+			intersection_set = nc.second.get_path_intersection(incoming_ids);
+			return !intersection_set.empty() && c == nc.second.get_next_node()->get_char();
 		});
 
 		if (matching_node_con_it == m_node_connections.end())
 			return { nullptr, intersection_set };
 		else
-			return { &(*matching_node_con_it->get_next_node()), intersection_set };
+			return { &(*matching_node_con_it->second.get_next_node()), intersection_set };
 
 	}
 
 	std::pair<Node*, set<unique_id_t>> get_next_node_with(char c) {
 		
 		auto matching_node_con_it = std::find_if(m_node_connections.begin(), m_node_connections.end(),
-			[&c](NodeConnection nc) -> bool
+			[&c](pair<Node*, NodeConnection> nc) -> bool
 		{
-			return c == nc.get_next_node()->get_char();
+			return c == nc.second.get_next_node()->get_char();
 		});
 
 		if (matching_node_con_it == m_node_connections.end())
 			return { nullptr, set<unique_id_t>() };
 		else
-			return { &(*matching_node_con_it->get_next_node()),
-					 matching_node_con_it->get_all_ids()	};
+			return { &(*matching_node_con_it->second.get_next_node()),
+					 matching_node_con_it->second.get_all_ids()	};
 
 	}
 
@@ -82,13 +82,13 @@ public:
 
 		for (auto nc : m_node_connections)
 		{
-			auto path_intersection = nc.get_path_intersection(paths);
+			auto path_intersection = nc.second.get_path_intersection(paths);
 
 			if (!path_intersection.empty()) //if this is a valid path to continue down given the existing unique ids "paths"
 				if (
-					nc.get_next_node()->get_terminating_strings(
+					nc.second.get_next_node()->get_terminating_strings(
 						result_counter, num_results_to_return, results, path_intersection, 
-						current_path + nc.get_next_node()->get_char()))
+						current_path + nc.second.get_next_node()->get_char()))
 					return true;
 
 		}
