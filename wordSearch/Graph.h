@@ -45,7 +45,7 @@ public:
 
 	void addString(string s);
 
-	size_t num_nodes() { return nodes->size(); }
+	//size_t num_nodes() { return nodes->size(); }
 
 	size_t max_depth() {
 		return m_max_depth;

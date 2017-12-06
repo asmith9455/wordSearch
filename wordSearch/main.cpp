@@ -42,9 +42,22 @@ Graph read_graph_from_file(string filepath) {
 	//add all strings in the file to the graph
 	unsigned word_added_count = 0;
 
+	char current_char = ' ', last_char = ' ';
+
 	while (getline(fs, s)) {
 		g.addString(s);
-		word_added_count++;
+		current_char = toupper(s[0]);
+		if (current_char != last_char) {
+			cout << "current_char: " << current_char << endl;
+			last_char = current_char;
+		}
+		++word_added_count;
+
+		if (word_added_count % 1000 == 0)
+			cout << "word_added_count: " << word_added_count << endl;
+
+		if (word_added_count > 3000)
+			break;
 	}
 
 	//can now quickly search the graph with partial or complete searches
@@ -78,15 +91,11 @@ void user_graph_search_loop(Graph& g) {
 int main()
 {
 
-	test_001();
-
-
-
 	Graph g2 = read_graph_from_file("word_list_a.txt");
 
-	cout << "size is: " << g2.num_nodes() << endl;
+	//cout << "number of nodes is: " << g2.num_nodes() << endl;
 
-	vector<string> results2 = g2.search("de", 10);
+	vector<string> results2 = g2.search("acetylt", 10);
 
 	cout << "results: " << endl;
 
@@ -95,7 +104,7 @@ int main()
 
 	//auto r = g2.node_counts_by_depth();
 
-	system("pause");
+	//system("pause");
 
 	return 0;
 }

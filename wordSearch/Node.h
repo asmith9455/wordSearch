@@ -70,7 +70,9 @@ public:
 
 		//first check this node for any terminating strings and if they exist append to the results list
 
-		if (!m_terminating_ids.empty())
+		auto inter_set_term = intersection_of_sets(m_terminating_ids, paths);
+
+		if (!inter_set_term.empty())	//bug here?
 		{
 			results.push_back(current_path);
 			++result_counter;
