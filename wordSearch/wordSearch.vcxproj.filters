@@ -24,6 +24,9 @@
     <ClCompile Include="Node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="NodeConnection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graph.h">
@@ -31,6 +34,9 @@
     </ClInclude>
     <ClInclude Include="Node.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeConnection.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

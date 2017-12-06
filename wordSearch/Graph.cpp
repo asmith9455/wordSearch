@@ -1,6 +1,9 @@
 #include "Graph.h"
 
-Node* Graph::add_node(Node n, size_t depth){
+//add a new node and return a pointer to it
+Node* Graph::add_node(char c, size_t depth){
+
+	Node n(c, depth);
 
 	if (nodes->size() <= depth)
 		nodes->push_back({});	//push back a new vector of nodes
@@ -38,21 +41,17 @@ void Graph::addString(string s)
 	Node *n = get_start_node(), *next_node;
 	string tmp;
 	size_t depth = 1;
+	unique_id_t id = num_added_nodes;
 
-	for (char c : s)
-	{
-		
+	for (char c : s) {
 		//this is not the desired behaviour - the memory usage is much higher this way - need to be able to search all nodes at a given depth level
 		next_node = get_node(depth, c);
 
-		if (!next_node){	// if tmpNode is null (the node for 'c' doesn't exist), we need to add a node with this character.
-			next_node = add_node(Node(c, depth), depth); //next_node points to the most recently added element.
-		}
+		if (!next_node)	// if tmpNode is null (the next_node for 'c' doesn't exist), we need to add a node with this character.
+			next_node = add_node(c, depth); //next_node points to the most recently added element.
 
-		//we need to add this as a next node if the node doesn't have it in it's next nodes list
-		auto ptr = n->get_next_node_with(c, tmp);
-		if (!ptr)
-			n->add_next_node(next_node, tmp);
+		//add a connection to the next_node from the current node
+		n->add_next_node_connection(next_node, id);
 
 		//now next_node points to the next node @ depth that corresponds to the string s
 		n = next_node;
@@ -62,23 +61,40 @@ void Graph::addString(string s)
 
 	m_max_depth = max(m_max_depth, depth - 1);
 
-	//now just need to add the string s as a terminating string at node n (corresponding to the last character)
-	n->add_terminating_string(s);
+	n->add_terminating_id(id);
+
+	++num_added_nodes;
 
 }
 
 vector<string> Graph::search(string search_string, size_t num_results_to_return)
 {
-	Node *n = get_start_node(), *next_node;
-	size_t result_counter = 0;
-	vector<string> results;
 
+
+	//part 1 - traverse the graph using the partial search
+
+	vector<string> results;
+	Node *n = get_start_node(), *next_node = nullptr;
+	size_t result_counter = 0;
+
+	bool first_char = true;
 	string path_string_base;
+	set<unique_id_t> path_ids;
 
 	for (char c : search_string)
 	{
 		//go through the terminating strings and add them to the results vector
-		next_node = n->get_next_node_with(c, path_string_base);
+		if (first_char) {
+			//on the first character, we search for the next node using only the character (path_ids are not important)
+			auto pair = n->get_next_node_with(c);
+			next_node = pair.first;
+			path_ids = pair.second;
+		}
+		else {
+			auto pair = n->get_next_node_with(c, path_ids);
+			next_node = pair.first;
+			path_ids = pair.second;	//path ids may be reduced in size by internal intersection operations
+		}
 
 		if (next_node)
 			n = next_node;
@@ -86,42 +102,19 @@ vector<string> Graph::search(string search_string, size_t num_results_to_return)
 			break;
 
 		path_string_base += c;
+		first_char = false;
 	}
 
-	//now all terminating words below this node in the graph are a search result - simply return the correct number of them
+	//part 2 - find all possible matches up to the number of requested results
 
-	//we must arrive at each node pointer with a certain path
-	stack<pair<Node*, string>> nodes_to_check;
+	using node_tracker_t = tuple<Node*, set<unique_id_t>, string>;
 
-	nodes_to_check.push({ n , path_string_base + n->get_char()});
-	string path_string;
+	stack<node_tracker_t> nodes_to_check;
 
-	while (true)
-	{
+	nodes_to_check.push({ n, path_ids, path_string_base });
 
-		n = nodes_to_check.top().first;
 
-		path_string = nodes_to_check.top().second;
-
-		nodes_to_check.pop();
-
-		result_counter += n->get_terminating_strings(result_counter, num_results_to_return, results);
-		
-		if (result_counter >= num_results_to_return)
-			return results;
-
-		//use int here rather than size_t so the iteration works 
-		auto new_nodes = n->get_next_nodes(path_string);
-
-		for (Node* n : new_nodes)
-			nodes_to_check.push({ n, path_string + n->get_char()});
-		
-		if (nodes_to_check.empty())
-		{
-			return results;
-		}
-			
-	}
+	n->get_terminating_strings(result_counter, num_results_to_return, results, path_ids, path_string_base);
 
 	return results;
 }

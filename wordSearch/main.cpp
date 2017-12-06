@@ -24,7 +24,7 @@ void test_001()
  	g.addString("untest");
 	g.addString("aeatr");
  
- 	auto r = g.search("a", 5);
+ 	auto r = g.search("test", 5);
  
  	cout << "Results are: " << endl;
  
@@ -77,6 +77,7 @@ void user_graph_search_loop(Graph& g) {
 
 int main()
 {
+
 	test_001();
 
 
@@ -85,7 +86,7 @@ int main()
 
 	cout << "size is: " << g2.num_nodes() << endl;
 
-	vector<string> results2 = g2.search("dea", 10);
+	vector<string> results2 = g2.search("de", 10);
 
 	cout << "results: " << endl;
 

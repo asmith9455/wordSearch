@@ -5,12 +5,16 @@
 #include <memory>
 #include "Node.h"
 #include <algorithm>
+#include <tuple>
 
 
 class Graph
 {
 
+public:
+	using unique_id_t = Node::unique_id_t;
 
+private:
 	// pointers to list remain valid for the lifetime of the list 
 	// (adding/removing elements from the list doesn't invalidate 
 	// the positions of the list's elements on the heap)
@@ -22,13 +26,14 @@ class Graph
 
 	shared_ptr<nodes_t> nodes = make_shared<nodes_t>();	//hold the information in a multidimensional array wrapped in a shared pointer
 
-	Node* add_node(Node n, size_t depth);
+	Node* add_node(char c, size_t depth);
 	Node* get_node(size_t depth, char c);
 	Node* get_start_node() {
 		return get_node(0, ' ');
 	}
 	Node* m_last_added_node = nullptr;
 	size_t m_max_depth = 0;
+	unique_id_t num_added_nodes = 0;
 
 	//with the current setup - need to disable copy assignment
 

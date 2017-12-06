@@ -2,16 +2,35 @@
 
 Node::Node(char c, size_t depth)
 {
-	_c = c;
-	_depth = depth;
+	m_c = c;
+	m_depth = depth;
 }
 
 char Node::get_char()
 {
-	return _c;
+	return m_c;
 }
 
-size_t Node::get_terminating_strings(size_t index, size_t index_limit, vector<string>& add_to)
+
+
+// the path string is the string including all chars up to this node, but not including this node
+void Node::add_next_node_connection(Node* next_node, unique_id_t id)
+{
+	//check if there is a node connection to n already
+	auto it = std::find_if(m_node_connections.begin(), m_node_connections.end(), 
+		[&next_node](NodeConnection nc) -> bool {return nc.get_next_node() == next_node; });
+
+	if (it != m_node_connections.end())			//if the next_node pointer is already a connected node
+		it->add_path_id(id);
+	else										//otherwise we need to add a new connection to the node
+		m_node_connections.push_back(NodeConnection(next_node, id));
+}
+
+void Node::add_terminating_id(unique_id_t id) {
+	m_terminating_ids.insert(id);
+}
+
+/*size_t Node::get_terminating_strings(size_t index, size_t index_limit, vector<string>& add_to)
 {
 	size_t init_size = add_to.size();
 
@@ -24,18 +43,6 @@ size_t Node::get_terminating_strings(size_t index, size_t index_limit, vector<st
 	}
 
 	return add_to.size() - init_size;
-}
-
-// the path string is the string including all chars up to this node, but not including this node
-void Node::add_next_node(Node* n, string path_string)
-{
-	next_nodes.push_back(n);
-	path_strings.push_back({path_string});
-}
-
-void Node::add_terminating_string(string s)
-{
-	_terminating_strings.push_back(s);
 }
 
 vector<Node*> Node::get_next_nodes(string path_string)
@@ -75,5 +82,5 @@ Node* Node::get_next_node_with(char c, string path_string)
 	}
 		
 	return nullptr;
-}
+}*/
 
